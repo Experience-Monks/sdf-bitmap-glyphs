@@ -2,8 +2,6 @@
 
 [![experimental](http://badges.github.io/stability-badges/dist/experimental.svg)](http://github.com/badges/stability-badges)
 
-![tile](http://i.imgur.com/hMH0hWL.png)
-
 Extract SDF bitmap tiles from font files. This is a thin wrapper around [node-fontnik](https://github.com/mapbox/node-fontnik). 
 
 ```js
@@ -41,7 +39,9 @@ Each glyph is stored by its code point and looks like this:
 }
 ```
 
-See [test/demo.js](test/demo.js) for an example of rendering the bitmap tile.
+See [test/demo.js](test/demo.js) for an example of rendering a bitmap tile like this:
+
+![tile](http://i.imgur.com/hMH0hWL.png)
 
 ## Usage
 
