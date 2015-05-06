@@ -9,6 +9,7 @@ var fs = require('fs')
 var path = require('path')
 var save = require('save-pixels')
 var ndarray = require('ndarray')
+var ops = require('ndarray-ops')
 
 var font = fs.readFileSync(path.resolve(__dirname, 'fixtures/OpenSans-Bold.ttf'))
 
@@ -21,23 +22,18 @@ extract(font, function (err, data) {
 })
 
 function toRGBA (glyph) {
-  var shape = [ glyph.shape[1], glyph.shape[0], 1 ]
-  var alpha = ndarray(glyph.bitmap, shape)
+  var w = glyph.shape[0], h = glyph.shape[1]
 
-  var width = alpha.shape[0],
-    height = alpha.shape[1]
-  var result = new Uint8ClampedArray(width * height * 4)
-  var output = ndarray(result, [width, height, 4])
+  //glyph.bitmap is rotated, so we use [h, w]
+  var alpha = ndarray(glyph.bitmap, [h, w, 1])
+  var buf = new Uint8ClampedArray(alpha.size * 4)
+  var output = ndarray(buf, [h, w, 4])
 
-  for (var i = 0; i < width * height; i++) {
-    var x = Math.floor(i % width),
-      y = Math.floor(i / width)
-    var a = alpha.get(x, y, 0)
-    var idx = output.index(x, y, 0)
-    result[idx + 0] = a
-    result[idx + 1] = a
-    result[idx + 2] = a
-    result[idx + 3] = 0xff
-  }
+  //fill R,G,B as the signed distance
+  for (var i = 0; i < 3; ++i)
+    ops.assign(output.pick(-1, -1, i), alpha)
+  
+  //fill alpha as 0xff
+  ops.assigns(output.pick(-1, -1, 3), 0xff)
   return output.transpose(1, 0, 2)
 }
