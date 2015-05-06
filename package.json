@@ -1,6 +1,6 @@
 {
   "name": "sdf-bitmap-glyphs",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "extract SDF bitmaps from fonts using fontnik",
   "main": "index.js",
   "license": "MIT",
